@@ -33,7 +33,7 @@ class Dict(dict):
         isFrozen = (hasattr(self, '__frozen') and
                     object.__getattribute__(self, '__frozen'))
         if isFrozen and name not in super(Dict, self).keys():
-                raise KeyError(name)
+            raise KeyError(name)
         super(Dict, self).__setitem__(name, value)
         try:
             p = object.__getattribute__(self, '__parent')
@@ -100,6 +100,10 @@ class Dict(dict):
             other[copy.deepcopy(key, memo)] = copy.deepcopy(value, memo)
         return other
 
+    def get_by_index(self, index: int):
+        keys = list(self.keys())
+        return self.__getitem__(keys[index])
+
     def update(self, *args, **kwargs):
         other = {}
         if args:
@@ -109,8 +113,8 @@ class Dict(dict):
         other.update(kwargs)
         for k, v in other.items():
             if ((k not in self) or
-                (not isinstance(self[k], dict)) or
-                (not isinstance(v, dict))):
+                    (not isinstance(self[k], dict)) or
+                    (not isinstance(v, dict))):
                 self[k] = v
             else:
                 self[k].update(v)
